@@ -1,0 +1,1579 @@
+
+UNIX: (my commands)
+
+
+change timezove into ist:
+bash-4.2$ export TZ='Asia/Kolkata'
+bash-4.2$ date
+Wed Mar  3 17:54:28 IST 2021
+
+
+Data value separator just like awk in unix this is for query,
+Search for "OM" in string "Customer", and return position:
+SELECT CHARINDEX('OM', 'Customer') AS MatchPosition;
+output: 5
+Search for "mer" in string "Customer", and return position (start in position 3):
+SELECT CHARINDEX('mer', 'Customer', 3) AS MatchPosition;
+output: 6
+
+1. Main Formate the date:  date "+%a, %b, %d, 20%g, %k:%M:%S "    similarly, date   (use %k for 24 hours, use l for 12 hours) ----------date -d "2019-07-23 04:21:45" +"[%d-%b-%y %I.%M.%S %P]"
+    ______________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+2. if[ ${a} -eq 1 -a ${b} -eq 2 ]    --- where -a is an "AND" operator
+   OR
+   if [ ${a} -eq 1 ] && [ ${b} -eq 2 ]  --- where && is "AND" operator
+    ______________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+3. if[ ${a} -eq 1 -o ${b} -eq 2 ]    --- where -a is an "OR" operator
+   OR
+   if [ ${a} -eq 1 ] || [ ${b} -eq 2 ]  --- where && is "OR" operator
+    ______________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+4. Delete the blank line temporary,  cat Sample_File.txt|sed '/^$/d'      (Add blank line next in each line "sed -e 'G;G;G;G;G' file"  where, G; indicates single Blank line)
+  OR
+   cat Sample_File.txt | perl -lane "print if /\S/"
+  OR
+   Delete blank line permanently sed -i '/^$/d' Sample_File.txt
+  OR
+   grep . Sample_File.txt  --- grep looks at your file line-by-line; the dot . matches anything except a newline character. The output from grep is therefore all the lines that consist of something other than a single newline.
+  OR
+   awk 'NF > 0' Sample_File.txt
+  OR
+   awk '!/^$/' Sample_File.txt
+
+    ______________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+5. find ./ -name "*java*" -type f -exec grep -il java {} \;    --- Use for to search the filename and path in which the word called "java" is present.
+    ______________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+6. How to convert date and time into seconds?
+   date -d "2019-07-11 09:30" '+%s'
+    ______________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+7. awk 'BEGIN { FS = "|" } ; {sum+=$1} END {print sum}' Sample_File.txt
+
+Sample_File.txt
+UNIQ_NO|PRODUCT_NAME|PRICE|RATING|SELL|2019-07-12
+1|HP|20000|4|10|2019-07-12
+2|DELL|21000|5|8|2019-07-12
+3|LENOVO|19000|3|15|2019-07-12
+4|IBALL|15000|4|20|2019-07-12
+5|APPLE|30000|5|5|2019-07-12
+
+Output: 15
+    ______________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+8. awk -F '|' '$1 == "smiths" {sum += $3} END {print sum}' inputfilename
+    ______________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+9. awk -F '|' '$1 ~ /smiths/ {sum += $3} END {print sum}' inputfilename
+    ______________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+10. awk -F '|' '{a[$1] += $3} END{print a["smiths"]}' filename.txt
+  OR
+   awk -F '|' '{a[$1] += $3} END{for (i in a) print i, a[i]}' filename.txt
+    ______________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+11. cat filename.txt | grep smiths | awk -F '|' '{sum+=$NF} END {print sum}'
+    ______________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+12.  Find Square Root anywhere in unix: ------->  printf "4"|awk '{print sqrt($0)}'  -------> output is 2
+     OR
+     awk "END{print sqrt(4)}" < /dev/null
+    ______________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+13.  Convert to tar and bzip2 -------> tar -cvjf backup.tar.bz2 NEW_DIR/*        ------- where all file in NEW_DIR is compress and copy into backup.tar.bz2
+     AND for bunzip2  ----------> bunzip2 backup.tar.bz2
+    ______________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+14. netstat -a  ------------- This command will display all open ports on the local system.
+    ______________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+15. factor command is used to show the prime factors of a number. ------------>  factor 100   ------> output:  100: 2 2 5 5
+    ______________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+16. Check the last 3 days logs in log path:----> find ./ -name "*.log" -mtime -3 ;
+    AND excluding last 3 days logs remove all logs use ----------> find ./ -name "*.log" ! -mtime -3 -exec rm -rf {} \; 
+    ______________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+17. Clear Screen:  alias clear='printf "\033c"'
+    ______________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+18. How to remove space in records, sed  's/ \+//g' Sample_File.txt
+    AND if we use .* that is ----> sed  's/ \+.*//' Sample_File.txt -------> that time space and next of space character is also deleted.
+    ______________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+19. sed -e 's/^_/|/g' -e 's/^]/\n/g' TLG.DLS.ATT2MASTEROWN.COMBINE_BILL_ATTR.04.0000000000.20190801.125153.407697317-0400.EDT.dat
+    ______________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+20. DataBase vertica connection:   vsql -a -h vertica.test.att.com -U qa0cdrload -d VDWQ
+  paswd:  vert0607
+    ______________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+21. vsql -a -h vertica.test.att.com -U qa0cdrload -w vert0607 -d VDWQ -p 5433        ----------- direct connection
+    ______________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+22. pos=2; awk -F '|' -v  abc=${pos} '{ print $abc }' TLG_DLS_ATT2MASTEROWN_CUSTOMER_NS.txt ----------in this command pos=2 means print the column where comes in position 2. (i.e column 2)
+    ______________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+23. for position in 1 2 3 4 5
+    do
+            tail -1 "filename"|awk -v x=$position '{printf $x }'
+    done
+    ______________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+24. echo "123 456 10 11 90 39 20" | awk '{split($0,blah," ");{for(i=1;i<=NF;i++)print blah[i]}}'
+    ______________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+25. awk 'BEGIN { FS ="|" } {for(i=1;i<=NF;i++){if($i=="SBM"){print i;}}}' TLG_DLS_ATT2MASTEROWN_CUSTOMER_NS.txt|head
+    ______________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+26.  sed -i '/YUGPM/d' duplicat_160_minus.txt
+    ______________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+27.Teradata Connect:
+bteq
+.logon jadm11.jadc.att.com/qa5load
+password: LOAD2019$JLQA5
+    ______________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+28. It's a file test operator. -d /some/path means "return true if /some/path is a directory". ! is negation, so ! -d /some/path means "return true if /some/path is not a directory".
+if [ ! -d "${HADOOP_HOME}" ]; then
+   if [ -d "${CDH_HADOOP_HOME}" ]; then
+    ______________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+29.-n
+   string is not null.
+
+-z
+  string is null, that is, has zero length
+To illustrate:
+
+$ foo="bar";
+$ [ -n "$foo" ] && echo "foo is not null"
+foo is not null
+$ [ -z "$foo" ] && echo "foo is null"
+$ foo="";
+$ [ -n "$foo" ] && echo "foo is not null"
+$ [ -z "$foo" ] && echo "foo is null"
+foo is null
+    ______________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+30.  sed -ne "37,200p" -e 's/$/./g' a.txt
+    ______________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+31.  diff -a <(cat /cfs/app/etl_t4x/ecdw_apps_t41a/absetl/files/tgtfiles/daily/$file | sort) <(cat /cfs/app/etl_t4x/ecdw_apps_t41/absetl/files/tgtfiles/daily | sort) 
+    ______________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+32.    cut -d"|" --complement -f1,5-7  filename.txt                            (Note: This command return all columns excluding 1,5,6,7)
+    ______________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+33.  You can encrypt data.zip with a password by passing the -e option:
+       zip -r -e data.zip data/
+    ______________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+34.    unzip -l file.zip |grep -i pattern   (File Count In a .zip Archive)
+    ______________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+35. 
+cat abs_bizcomp_feat_actv.tmplt.bteq.ctl|grep -iw from |awk '{print $2}'|awk -F '.' '{print $1}'|grep .|sort|uniq
+
+
+cat abs_bizcomp_feat_actv.tmplt.bteq.ctl|grep -ie EDW_DB_VIEW_TKN|awk -F '.' '{print $2}'|awk '{print $1}'|sort|uniq
+    ______________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+36.   awk -F '|' ' length($1) > 255  {print $0}' file    ----------------string length
+    ______________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+37.   echo "Hello" |mail -s "Test_Subject" dhanango@amdocs.com
+
+        ________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+
+38.   svn switch svn://scm.it.att.com:13516/abssvn/etl/branches/prod_fix/absrpt/2020_ABSRPT_RL_2001_sust/bin/	  --username pb890n --password Samrat1# --force >> /cfs/app/etl_t4x/ecdw_apps_t41d/absrpt/log_home/svn/svnswith_CR5375146.log
+        ________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+39.   tnsping q2ecwet    (show oracle details like database_name, host_name, port,etc..)
+        ________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+40.   etlap41d@lltd011 $ awk -F'|' '{ SUM += $8} END { printf "%.2f",  SUM  }' wbs_comm_bid_feature_activity.20191212    (sum of decimal values)
+        ________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+41.   SVN:    svn switch svn://scm.it.att.com:13516/abssvn/etl/branches/prod_fix/abs_fp/FP_2020_2001_Sust/ctl	  --username pb890n --password Samrat1# --force >> /cfs/app/etl_t4x/ecdw_apps_t41c/absfp/log_home/svn/svnswith_CR5473621_c.log
+        ________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+42.   Connect Direct: 
+/opt/app/ndm/localbin/cdunix_generic /cfs/app/etl_t4x/ecdw_apps_t41d/absrpt/files/tgtfiles/daily/abs_bizcomp_fan_sgmnt_chg_20191212.txt_After_fix /opt/app/bizcomp/shared/newprod/data/drop/abs_bizcomp_fan_sgmnt_chg_20191212.txt_After_fix  oltd019 absrpt
+        ________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+43.   Data Router command:
+ curl -v -X PUT --user m96759:etlDr#2016 -H "Content-Type: application/octet-stream" -H 'X-ATT-DR-META:{"file_type":"txt","feed_type":"delta-data-set","compression":"N","delimiter":"|","record_count":"89052","publish_date":"2020-01-18 13:15:00","file_size":"15048","splits":"na","feed_id":"28822","version":"2.0"}' --data-binary @/cfs/app/etl_t4x/ecdw_apps_t41d/absrpt/files/tgtfiles/daily/abs_bizcomp_EOD_Gross_adds_20191216.txt --post301 --location-trusted https://feeds-uat-drtr.web.att.com/publish/4771/abs_bizcomp_EOD_Gross_adds_20191216.txt_after_fix
+        ________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+44.   sql -F $',' -a -h vertica.test.att.com -U qa0cdrload -w vert0607 -d VDWQ -p 5433 -At -c "SELECT * FROM all_tables"|grep -i  acc
+        ________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+45. https://wiki.web.att.com/display/BEG/Test+Linux+Servers
+        ________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+46. without unzip split file:   split -b 2048m "att_mldbxref_stg_extr_20200226.txt.gz" "att_mldbxref_stg_extr_20200226.txt.gz.part-" &
+OR
+zcat file.gz | split -l 2000000 – file.gz.part
+or
+gunzip –c file.gz | split -l 2000000 – file.gz.part
+        ________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+47.  tdata bkp: CALL SYSPROCS.BACKUP_TABLE_ONLINE ('subsrptn_disc_bkp_test','qa7db','subsrptn_disc',RC,MSG);
+OR
+CALL DPLMACRO.BACKUP_TABLE_ONLINE ('subsrptn_disc_bkp_test','qa7db','subsrptn_disc',RC,MSG);
+        ________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+48. running query seddion in tdata: SELECT * FROM TABLE (MonitorSession(-1,'*',0)) dt;
+        ________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+49.SELECT
+     node_name
+    ,user_name
+    ,'SELECT CLOSE_SESSION(''' || session_id || ''');'  AS CloseSession
+    ,statement_start
+    ,(GETDATE() - statement_start)::INTERVAL  AS current_statement_duration  
+    ,REGEXP_REPLACE(current_statement,'[\r\n\t]',' ') AS current_statement 
+    ,session_id
+    ,transaction_id
+    ,statement_id
+    ,client_hostname
+            ,client_os
+    ,login_timestamp
+    ,runtime_priority
+    ,ssl_state
+    ,authentication_method
+    ,transaction_start
+    ,GETDATE() AS Today
+FROM v_monitor.sessions
+ORDER BY current_statement_duration DESC; 
+Hemangi Patil 3:25 PM:  
+okay
+Pushparaj Bundela 3:25 PM: 
+
+
+then 
+select close_session('v_vdwq_node0006-16977:0x1468075') ;---vertica
+        ________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+50.   zcat att_xbfwrdtl_t_stg_extr_20200217.txt.gz|head -1|awk -F '|' '{for (i=1;i<=NF;i++) {if ($i=="baseduedate") {print i;}}}'   ----to know the column position
+        ________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+51.   how to convert template scheduled file to tws scheduled file:
+
+       ksh -x $ZONE_COMMON_DIR/code/bin/ecdw.sched_wrapper.ksh -a tlgcor -F zone11_tlgcor_load 
+        ________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+52.  Run Collect stats: 
+SELECT  'collect stats on qa5db.subsrptn  column ('||ColumnName||');'
+FROM    DBC.ColumnsV
+WHERE   DatabaseName = 'qa5db'
+AND     TableName = 'subsrptn'
+ORDER BY    ColumnID;
+        ________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+53.   vsql -F $'\001' -R $'\002' -P null='MYNULL' -A -X -t -n -q -c "select * from <table>" -o <file>
+Where:
+
+-F $'\001' sets the field separator to ASCII value 1 (CTRL-A)
+-R $'\002' sets the record separator to ASCII value 2 (CTRL-B)
+-P null='MYNULL' specifies that NULLs should be represented with the string MYNULL
+-A to use unaligned output
+-X to avoid running vsql initialisation file
+-t to disable printing column names (tuples only)
+-n to disable command line editing
+-q to work quietly (no welcomnmessages & co)
+-c <command> to define the export command
+-o <myfile> sets the output file
+        ________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+54.   vsql -At -p 1521 -U dg663e -w BardFasten^Closed97 -d VDW -h vertica.it.att.com -f  query_ashish.txt \ | vsql -U qa0comload -w vert862 -d VDWQ -h vertica.test.att.com -c "COPY QA0COMDB.com_ln_itm FROM STDIN DELIMITER '|';"
+        ________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+55.  ON REQUEST replase in QDM
+copy Schedule_COR_zone13.sched Schedule_COR_zone13.sched_comment
+(i)	grep -iw "^ON" Schedule_COR_zone13.sched_comment|sort|uniq|while read requt; do echo "sed -i 's/${requt}/ON REQUEST/g' Schedule_COR_zone13.sched_comment" > temp.sh; echo "------${requt} changed to ON REQUEST"; sh temp.sh; done
+(ii)	grep -e "^AT" -e CARRY  Schedule_COR_zone13.sched_comment|sort|uniq|while read requt; do echo "sed -i 's/${requt}/#${requt}/g' Schedule_COR_zone13.sched_comment" > temp.sh; echo "------${requt} changed to #${requt}"; sh temp.sh; done
+        ________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+56.  Teradata Condition: .IF ERRORCODE <> 0 THEN .QUIT 40
+
+
+.EXPORT FILE = ${THIS_APP_TGT_FILES_DIR}/daily/subsrptn_prd_dim_uvrse.$NEW_BATCH.dat;
+.SET WIDTH 1500
+
+
+        ________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+57.   Create data base link in oracle: (here in connection we are using q10ecwet so it will be using in other than q10ecwet database like q9ecwet,q6ecwet)
+ 
+CREATE DATABASE LINK dg663e_link1
+CONNECT TO ecdw_tlgcor_nws_ggs IDENTIFIED BY L0g#nPwd2019
+USING '(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=t2edw1d11.vci.att.com)(PORT=1524))(CONNECT_DATA=(SID=Q10ECWET)))';  
+
+How to drop link:  drop database link dg663e_link1;66
+
+        ________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+58.  For lob columns - dbms_lob.substr((CHG_CHANGE.DESCRIPTION),1000,1)
+        ________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+59.  /cfs/app/etl_t1x/ecdw_apps_t13/qdm/runtime/temp/TRND_CMPNT_DATA_1107749.ctl    -teradata load commadn 
+        ________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+60.       SELECT calendar_date,to_CHAR(calendar_date, 'DAY') daayy ,1 as day_counter
+FROM (
+SELECT SYSDATE - ROWNUM +1 calendar_date
+FROM DUAL
+CONNECT BY 1 = 1 AND ROWNUM <= 365)
+WHERE calendar_date >= trunc(ADD_months(SYSDATE,-1))
+and calendar_date < trunc(sysdate)
+order by CALENDAR_DATE desc
+        ________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+61.   Vertica query- concate multiple rows onto single row:
+SELECT Request_ID, 
+   LISTAGG ( Activity USING PARAMETERS max_length=1000, on_overflow='TRUNCATE') Activity
+   FROM DVXVIEWS.ACMR8_CHANGE_ACTIVITY_LOG where Request_ID='000000432599370' GROUP BY Request_ID;
+        ________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+62.     Oracle query- concate multiple rows onto single row:
+SELECT Request_ID, LISTAGG(Activity, ',') WITHIN GROUP (ORDER BY seqno) AS temp FROM ACMR8_CHANGE_ACTIVITY_LOG GROUP BY Request_ID;
+        ________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+63. DBLINK,dblink,DBlink  
+Compare one server colun to other server column:
+create database link sourcegg1
+connect to aradmin_cm identified by C_mN3wP4ss01
+using '(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=d1gcp2d7.vci.att.com)(PORT=1524))(CONNECT_DATA=(SID=d1gcp2d7)))';
+
+
+select distinct column_name from user_tab_columns@sourcegg1 where table_name='AP_SIGNATURE' 
+minus select distinct column_name from user_tab_columns where table_name='AP_SIGNATURE' ;
+        ________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+64.   [dg663e@lltd028 ~]$ cat test
+Request_id| SeqNo| LOB
+11| 1| aa
+11| 2| bb
+11| 3| cc
+12| 1| xx
+13| 2| yy
+
+
+sed '1d' test|awk -F '|' '{print $1}'|sort|uniq > primary.txt;
+for prkey in `cat primary.txt`; 
+ do echo "awk -F '|' -v prkey="${prkey}" '$""1 == $prkey {print $""0}' test|sort" > RUN.ksh;ksh RUN.ksh > File.csv;
+ ##cat File.csv;
+ echo "${prkey}|`awk '{printf ("%s%s",$3,NR%30?" ":"\n")}' File.csv`" >> Main_File.csv
+done
+        ________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+65.   RSA link: https://www.adminschoice.com/how-to-configure-ssh-without-password
+sftp/ssh without password
+follow simple below steps:
+ssh-keygen -t rsa
+
+1. Generate the public key private key pair
+Generate the public key private key pair for the local host as following, Press enter for default file names and no
+pass phrase options. The command here generates RSA type keys.
+You can run the command ssh-keygen from any directory but the id files will be generated in .ssh dir of user’s home directory.
+
+[web@localhost ~]$ ssh-keygen -t rsa
+Generating public/private rsa key pair.
+Enter file in which to save the key (/home/web/.ssh/id_rsa):
+Enter passphrase (empty for no passphrase):
+Enter same passphrase again:
+Your identification has been saved in /home/web/.ssh/id_rsa.
+Your public key has been saved in /home/web/.ssh/id_rsa.pub.
+The key fingerprint is:
+5e:30:d3:1a:00:c5:0b:29:96:ac:3e:42:20:dc:af:38 web@localhost.localdomain
+---------------------------------
+2. Change directory to .ssh directory of user .
+You will see two files starting with id_rsa. id_rsa is the private key and id_rsa.pub is public key. Check the date time stamp of these files to make sure these are the ones you generated recently.
+
+[web@localhost ~]$ cd /home/web/.ssh
+
+.ssh[web@localhost .ssh]$ ls -la
+total 32
+drwx—— 2 web web 4096 Dec 7 22:05 .
+drwx—— 34 web web 12288 Dec 7 22:04 ..
+-rw——- 1 web web 1675 Dec 7 22:05 id_rsa
+-rw-r–r– 1 web web 407 Dec 7 22:05 id_rsa.pub
+-rw-r–r– 1 web web 391 Dec 7 22:03 known_hosts
+
+Check the date to be sure of current generated files.
+---------------------------------
+3. Copy the rsa public key to the remote host
+Copy the public key file from above example to .ssh of the user home directory and if .ssh directory is not there , create it as in the example below. You need to enter sftp/ssh  password as passwordless access is not setup yet..
+
+/.ssh[web@localhost .ssh]$ sftp james@devserver
+Connecting to devserver…
+james@devserver’s password:
+sftp> pwd
+Remote working directory: /home/james
+sftp> cd .ssh
+Couldn’t canonicalise: No such file or directory
+sftp> mkdir .ssh
+sftp> cd .ssh
+sftp> put id_rsa.pub
+Uploading id_rsa.pub to /home/james/.ssh/id_rsa.pub
+id_rsa.pub 0% 0 0.0KB/s –:– ETAid_rsa.pub 100% 407 0.4KB/s 00:00
+sftp> 
+---------------------------------
+4. login to the remote host  with password
+Once file is copied over , login to the remote host using ssh and password and go to .ssh directory under user home directory.
+
+/.ssh[web@localhost .ssh]$ ssh james@devserver
+james@devserver’s password:
+
+james@devserver:~[james@devserver ~]$ cd .ssh
+james@devserver:~/.ssh[james@devserver .ssh]$ pwd
+/home/james/.ssh
+
+james@devserver:~/.ssh[james@devserver .ssh]$ ls -l
+total 4
+-rw-r–r– 1 james james 407 Dec 7 22:06 id_rsa.pub
+---------------------------------
+5. Rename the public key file, id_rsa.pub, to authorized_keys ;
+Rename or append to file corresponding to the ssh protocol version in your system , User ssh -V to find out the ssh version
+
+SSH protocols 1.3 and 1.5 uses file name as authorized_keys
+SSH protocol 2.0 uses file name as authorized_keys2
+
+if the authorized_keys file already exists then append the new keys to the existing file using,
+
+cat id_rsa.pub >> authorized_keys .
+Don’t use vi or editor to open , append and save these key files as any extra character/newline would corrupt these files.
+
+james@devserver:~/.ssh[james@devserver .ssh]$ mv id_rsa.pub authorized_keys
+
+You can see the contents using cat command
+james@devserver:~/.ssh[james@devserver .ssh]$ cat authorized_keys
+ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEArVWhE0L2FXNvmggZgqmGU
+LVrcE4X7WQr6scSuU5FCQUsXzYjyOL8FbUIIkBeLLMIrV7mYa+
+xuszHcvnAho/42/e4r5by8LVMyh0AAo7nketemkO/2ZiUXZhww7tySxgcI5U5L5PDmTCyF7vxLlJ0rGb7Ky//DtpKrBui5P4gIrKBeiA2TlbEL9UrQZ8HgTU3iSGtfUXH0O
+26iLSWi6Tf40hEazvvVYESHPSBjUPIMqUGabtz1kKMDQB5x
+C+F2MZ4lUCmgK2NexrhVWOrp7ODS1GlKsjSv6NSxOIVW0je
+V00ZW9Fvgz865g+fakBITqYP76ptPIVXEps+91ABRSwggQ== web@localhost.localdomain
+---------------------------------
+6. Change the key file and directory permissions
+ssh is very sensitive to permissions so you have to change the key file and directory permissions exactly as required for it to work.
+---------------------------------
+6a. Change authorized_keys to 600 permissions
+james@devserver:~/.ssh[james@devserver .ssh]$ chmod 600 authorized_keys
+james@devserver:~/.ssh[james@devserver .ssh]$ ls -ltr
+total 8
+-rw-r–r– 1 james james 407 Dec 7 22:06 id_rsa.pub
+-rw——- 1 james james 407 Dec 7 22:08 authorized_keys
+
+james@devserver:~/.ssh[james@devserver .ssh]$ cd ..
+---------------------------------
+6b. Change .ssh directory to 700 permission
+james@devserver:~[james@devserver ~]$ chmod 700 .ssh
+---------------------------------
+6c. Verify permissions and log out .
+james@devserver:~[james@devserver ~]$ logout
+Connection to localhost closed.
+---------------------------------
+7.  Moment of truth : Try a ssh or sftp
+/.ssh[web@localhost .ssh]$ ssh james@devserver
+Last login: Tue Dec 7 22:07:04 2010 from localhost.localdomain
+james@devserver:~[james@devserver ~]$ pwd
+/home/james
+/.ssh[web@localhost .ssh]$ sftp james@devserver
+sftp>
+---------------------------------
+8. Troubleshooting ssh/sftp access
+If you are still getting password prompt, The most common problems can be
+
+Incorrect permission for .ssh directory and authorized_keys / authorized_keys2 file
+Corrupt key file, regenerate and copy again.
+Space,character or line inserted or truncated during appending to existing file. Don’t copy keys manually but do a cat new_keys >> authorized_keys ; For new files copy the file and rename , don’t manually copy paste contents
+        ________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+66.    xxd -r -p filenmae -> newfile     (convert hexdump into binary)
+313030303036313030|3234|343732343935303339|32|313130|323032302d30362d31322031363a34353a3032|48696768|393939392d31322d33312030303a30303a3030|323032302d30362d31322031363a34353a3032|323032302d30362d31322031363a34353a3032|494e53455254|31 
+        ________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+67.    release mload in -- If our job fails at our application phase, we have to release the lock on the mloaded table. (in case drop work table mistakely)
+Run this ---> RELEASE MLOAD QA7PRESTAGE.SUBSRPTN_PRD_HIST;
+
+==> 15 Apr 2014
+TPT10508: RDBMS error 2583 error in teradata tpt
+Hi,
+I am trying to insert data from prod to dev by using TPT Update operator. By mistake i have deleted all error tables including work table, log table.
+Agin when i submit the script am got TPT10508: RDBMS error 2583 error in teradata tpt Error. Can you please suggest me how  resolve this issue.
+Error :
+UPDATE_OPERATOR: preparing target table(s)
+UPDATE_OPERATOR: TPT10508: RDBMS error 2583: Worktable is missing for QA7PRESTAGE.SUBSRPTN_PRD_HIST during MLoad restart.
+UPDATE_OPERATOR: disconnecting sessions
+ 
+Thanks
+Anil
+
+====>16 Apr 2014
+You will not be able to restart, complete, or back out the update at this point.
+You can use the RELEASE MLOAD statement to remove the lock, see the MultiLoad manual for details.
+Or drop and recreate / recover the target table.
+
+Note: 
+Error Codes
+Error code 2571
+        Mload can't be released. This error occurs when table does not exist or user does not have release mload access or table is not in application phase (using IN APPLY) or Mload is still active on target table.
+Error Code 2652
+	When user try to access the table that is being mloaded. In this scenario use locking with access modifier. (Operation not allowed - Table is being mloaded)
+        ________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+68.    Concate data in 1 line: 
+tablenm="$1"
+BASE_PATH="$2"
+cat Files/Oracle/${tablenm}.csv|cut -d"~" -f1|sort|uniq > ${BASE_PATH}/LOGS/primary.txt;
+        for prkey in `cat ${BASE_PATH}/LOGS/primary.txt`
+        do echo "awk 'BEGIN{FS=\"~\"} {if($""1==\"$prkey\"){print $""0}}' Files/Oracle/${tablenm}.csv" > ${BASE_PATH}/LOGS/RUN.ksh;ksh ${BASE_PATH}/LOGS/RUN.ksh > ${BASE_PATH}/LOGS/File.csv;
+          echo "${prkey}|"`cat ${BASE_PATH}/LOGS/File.csv|sort|awk 'BEGIN{FS="~"} {print $NF}' ORS=''` >> ${BASE_PATH}/LOGS/MAIN_FILE.csv
+done
+
+example:
+11|1|aa
+22|1|bb
+11|2|cc
+output:
+11|aacc
+22|cc
+
+        ________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+69.  Time: touch -a -m -t 202009220225.32 Filename.txt
+
+stat filename.txt
+        ________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+70.   [dg663e@clth156 ~]$  grep . target_bo_vertica_dbor.txt|while read record
+> do
+> BO=`echo $record | awk -F '|' '{print $1}'`
+> DBOR=`echo $record | awk -F '|' '{print $2}'`
+> echo "select count(*) from ARS_DBOR_CM_R1_BO.$BO;" > ora.sql;
+> echo "select count(*) from ARS_DBOR_CM_R1_BO.$BO;" >> output_dbor.txt
+> oracount=`sqlplus ARS_DBOR_CM_R1_BO/Welcome1234@d1gcp2d7.vci.att.com:1524/d1gcp2d7 << esql @ora.sql
+> esql`
+> echo "$oracount" >> output_dbor.txt;
+> echo "" >> output_dbor.txt;
+> vsql -a -h esarverticaaz.dev.att.com -U QA0ARS_DBOR_CM_RLOAD -w S08_7234 -d AZESADWD -p 5433 -At -c "select count(*) from QA0ARS_DBOR_CM_RVIEWS.$DBOR;" >> output_dbor.txt;
+> echo "===========================" >> output_dbor.txt;
+> done
+ [dg663e@clth156 ~]$  grep . target_bo_vertica_dbor.txt|while read record; do BO=`echo $record | awk -F '|' '{print $1}'`; DBOR=`echo $rcord | awk -F '|' '{print $2}'`; echo "select count(*) from ARS_DBOR_CM_R1_BO.$BO;" > ora.sql; echo "select count(*) from ARS_DBOR_CM_R1_BO.$BO;" >> output_dbor.txt; oracount=`sqlplus ARS_DBOR_CM_R1_BO/Welcome1234@d1gcp2d7.vci.att.com:1524/d1gcp2d7 << esql @ora.sql
+esql`; echo "$oracount" >> output_dbor.txt; echo "" >> output_dbor.txt; vsql -a -h esarverticaaz.dev.att.com -U QA0ARS_DBOR_CM_RLOAD -w S08_7234 -d AZESADWD -p 5433 -At -c "select count(*) from QA0ARS_DBOR_CM_RVIEWS.$DBOR;" >> output_dbor.txt; echo "===========================" >> output_dbor.txt; done
+
+        ________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+71.  => SELECT * FROM my_table;
+ a |   b   | c
+---+-------+---
+ a | one   | 1
+ b | two   | 2
+ c | three | 3
+ d | four  | 4
+ e | five  | 5
+(5 rows)
+=> \a
+Output format is unaligned.
+=> \t
+Showing only tuples.
+=> \pset fieldsep '\t'
+Field separator is "    ".
+=> \o dumpfile.txt
+=> select * from my_table;
+=> \o
+=> \! cat dumpfile.txt
+a       one     1
+b       two     2
+c       three   3
+d       four    4
+e       five    5
+        ________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+72.[dg663e@clth156 ~]$ awk '$1 != prev {if (NR != 1) print prev; prev=$1; delete a}; !($1 in a){a[$1]++; printf "%s ", $1}; !($2 in a){a[$2]++; printf "%s ", $2}; END {print prev}' sample.txt
+A1|1|abc  A1|1|abc
+B1|1|ghi  B1|1|ghi
+A1|2|def  A1|2|def
+B1|2|jkl  B1|2|jkl
+
+awk -F '|' '{n=$1;sub($1" ","",$0);t[n]?t[n]=t[n]","$0:t[n]=$0}END{for(i in t)print i,t[i]}' sample.txt
+
+[dg663e@clth156 ~]$ awk -F '|' '{n=$1;sub($1"|","",$3);t[n]?t[n]=t[n]" "$3:t[n]=$3}END{for(i in t)print i,t[i]}' sample.txt
+A1 abc def
+B1 ghi jkl
+
+etlap41@clth156 $ cat sample.txt
+A1|1|abc
+B1|1|ghi
+A1|2|def
+B1|2|jkl
+
+awk -F '|' '{n=$1;sub($1" ","",$3);t[n]?t[n]=t[n]" "$3:t[n]=$3}END{for(i in t)print i"~"t[i]}' sample.txt
+A1~abc def
+B1~ghi jkl
+awk -F '~' '{n=$(NF+1-NF);sub($1" ","",$(NF+3-NF));t[n]?t[n]=t[n]" "$3:t[n]=$(NF+3-NF)}END{for(i in t)print i"~"t[i]}'
+        ________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+73. db size link
+http://www.dba-oracle.com/t_size_oracle_database.htm
+        ________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+74.   hive -e "set hive.cli.print.header=true;select * from datacompare_unit.usrp_error limit 3;"|sed 's/\t/|/g'
+
+Error1: FAILED: ParseException line 109:0 Failed to recognize predicate 'AUTHORIZATION'. Failed rule: 'identifier' in column specification
+==> Solution: After doing "set hive.support.sql11.reserved.keywords=false", it allows to query the column with the keyword.
+
+Error2: FAILED: ParseException line 121:0 cannot recognize input near 'INTERVAL' 'decimal' '(' in column specification
+==> Solution: With the added backticks around INTERVAL, the query works as expected. e.g:   `INTERVAL`
+        ________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+75.    => SELECT SPLIT_PART('abc~@~def~@~ghi', '~@~', 2);
+ SPLIT_PART 
+------------
+ def
+(1 row)
+        ________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+76.    sed ':a;N;$!ba;s/\n/ /g' file
+
+This will read the whole file in a loop, then replaces the newline(s) with a space.
+
+Explanation:
+
+Create a label via :a.
+Append the current and next line to the pattern space via N.
+If we are before the last line, branch to the created label $!ba ($! means not to do it on the last line as there should be one final newline).
+Finally the substitution replaces every newline with a space on the pattern space (which is the whole file).
+        ________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+77.     Snowflake connect type 1:
+	--------------------------
+export SNOWSQL_PWD=Qa022321838
+snowsql -a cdodataplatform.east-us-2.privatelink -u QA0_AERS_EDF_LOAD --proxy-host dpsfproxy-prod.az.3pc.att.com --proxy-port 8080 -r QA0_ROLE_AERS_EDF_ETL -w QA0_DW_AERS_EDF_ETL_SMALL -d AZAERDWQ -s QA0_AERS_EDF_DB
+	Snowflake connect type 2:
+	--------------------------
+export SNOWSQL_PWD=Qa022321838
+export SNOWSQL_ACCOUNT=cdodataplatform.east-us-2.privatelink
+export SNOWSQL_USER=QA0_AERS_EDF_LOAD
+export SNOWSQL_ROLE=QA0_ROLE_AERS_EDF_ETL
+export SNOWSQL_WAREHOUSE=QA0_DW_AERS_EDF_ETL_SMALL
+export SNOWSQL_DATABASE=AZAERDWQ
+export SNOWSQL_SCHEMA=QA0_AERS_EDF_DB
+export proxy_conn="--proxy-host dpsfproxy-prod.az.3pc.att.com --proxy-port 8080"
+
+then simple type  ===> snowsql $proxy_conn
+
+	Export data into file:
+	---------------------
+
+D:\Snowflake\export>snowsql -c myconnection -q "select * from E_DEPT" -o output_format=csv -o header=false -o timing=false -o friendly=false  -o output_file=D:\Snowflake\export\dept_file.csv
+or
+
+D:\Snowflake\export>snowsql -c myconnection -q "select * from E_DEPT" -o output_format=csv -o header=false -o timing=false -o friendly=false  > dept_file.csv
+        ________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+78.   Spark read json file command:
+
+scala> val logonData=spark.read.json("file:/opt/data/stage01/datacompare/v_2.0_unittest/input/parquet_files1/AERS/AUto_Cloud/oracle_logon.json");
+logonData: org.apache.spark.sql.DataFrame = [_corrupt_record: string]
+
+OR
+
+scala> val logonData=spark.read.option("multiline", true).json("file:/opt/data/stage01/datacompare/v_2.0_unittest/input/parquet_files1/AERS/AUto_Cloud/oracle_logon.json");
+logonData: org.apache.spark.sql.DataFrame = [host: string, password: string ... 3 more fields]
+
+        ________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+79.  
+
+-rwxr-x--- 1 q1bbivrl hyhapps  2739670 Mar 31 07:27 ojdbc6.jar
+-rwxr-x--- 1 q1bbivrl hyhapps   775100 Mar 31 07:27 vertica-jdbc-9.2.1-0.jar
+-rwxr-x--- 1 q1bbivrl hyhapps  1158287 Mar 31 07:27 terajdbc4.jar
+-rwxr-x--- 1 q1bbivrl hyhapps   298539 Mar 31 07:27 vertica-9.0.1_spark2.1_scala2.11.jar
+-rwxr-x--- 1 q1bbivrl hyhapps  1158287 Mar 31 07:27 terajdbc4.jar_17.00.00.03
+-rwxr-x--- 1 q1bbivrl hyhapps  1111350 Mar 31 07:27 terajdbc4.jar_16
+-rwxr-x--- 1 q1bbivrl hyhapps 30625824 Mar 31 07:27 snowflake-jdbc-3.9.2.jar
+-rwxr-x--- 1 q1bbivrl hyhapps   983016 Mar 31 07:27 spark-snowflake_2.11-2.8.3-spark_2.3.jar
+-rwxr-x--- 1 q1bbivrl hyhapps     2613 Mar 31 07:27 tdgssconfig.jar
+$ spark-shell --jars ojdbc6.jar
+SPARK_MAJOR_VERSION is set to 2, using Spark2
+Setting default log level to "WARN".
+To adjust logging level use sc.setLogLevel(newLevel). For SparkR, use setLogLevel(newLevel).
+Spark context Web UI available at http://blpd239.bhdc.att.com:4040
+Spark context available as 'sc' (master = local[*], app id = local-1617192693310).
+Spark session available as 'spark'.
+Welcome to
+      ____              __
+     / __/__  ___ _____/ /__
+    _\ \/ _ \/ _ `/ __/  '_/
+   /___/ .__/\_,_/_/ /_/\_\   version 2.3.0.2.6.5.4-1
+      /_/
+
+Using Scala version 2.11.8 (Java HotSpot(TM) 64-Bit Server VM, Java 1.8.0_77)
+Type in expressions to have them evaluated.
+Type :help for more information.
+
+scala> val logonData=spark.read.option("multiline", true).json("file:/opt/data/stage01/datacompare/v_2.0_unittest/input/parquet_files1/AERS/AUto_Cloud/oracle_logon.json");
+logonData: org.apache.spark.sql.DataFrame = [host: string, password: string ... 3 more fields]
+
+scala> logonData.show();
++--------------------+-------------+----+------+-----+
+|                host|     password|port|schema|  sid|
++--------------------+-------------+----+------+-----+
+|t1cdw1d5.bhdc.att...|Peachtree$675|1522|H_TEMP|Q5CDW|
++--------------------+-------------+----+------+-----+
+
+
+scala> var host=logonData.select("host").first.getString(0)
+host: String = t1cdw1d5.bhdc.att.com
+
+scala> val port=logonData.select("port").first.getString(0)
+port: String = 1522
+
+scala> var sid=logonData.select("sid").first.getString(0)
+sid: String = Q5CDW
+
+scala> var schema=logonData.select("schema").first.getString(0)
+schema: String = H_TEMP
+
+scala> var password =logonData.select("password").first.getString(0)
+password: String = Peachtree$675
+
+scala> println("Loading data from Oracle")
+Loading data from Oracle
+
+scala> var url = "jdbc:oracle:thin:"+schema+"/"+password+"@//"+host+":"+port+"/"+sid
+url: String = jdbc:oracle:thin:H_TEMP/Peachtree$675@//t1cdw1d5.bhdc.att.com:1522/Q5CDW
+
+scala> var query:String ="select count(*) from query_control"
+query: String = select count(*) from query_control
+
+scala> var Load_query = "  ("+query+") foo"
+Load_query: String = "  (select count(*) from query_control) foo"
+
+scala> var DF = spark.read.format("jdbc").option("url", url).option("driver","oracle.jdbc.driver.OracleDriver").option("dbtable", Load_query).option("user", schema).option("password", password).option("numPartitions",2).option("encoding", "UTF-16").load()
+DF: org.apache.spark.sql.DataFrame = [COUNT(*): decimal(38,10)]
+
+scala> DF.show();
++----------------+
+|        COUNT(*)|
++----------------+
+|17955.0000000000|
++----------------+
+
+scala> sys.exit();
+        ________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+80. Display column list:
+       scala> var Src_ColList = source.columns.mkString(",")
+Src_ColList: String = col1,col2,col3
+
+______________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+81.     Create hashkey on dataframe in scala
+scala> source.show();
++----+----+----+
+|col1|col2|col3|
++----+----+----+
+|   1|   2|   3|
+|   1|   2|   3|
++----+----+----+
+
+var source_count: Long = 0
+  var target_count: Long = 0
+  var source_no_of_columns: Long = 0
+  var target_no_of_columns: Long = 0
+  var Src_ColList:String=null
+  var Tgt_ColList:String=null
+
+scala> import java.security.MessageDigest
+import java.security.MessageDigest
+
+scala> def md5hash(s:String) : String = {
+     |       val digest = MessageDigest.getInstance("MD5")
+     |       val md5hash = digest.digest(s.getBytes).map(0xFF & _).map { "%02x".format(_) }.foldLeft(""){_ + _}
+     |       return s.length()+"-"+md5hash.map(_.toUpper)
+     |     }
+md5hash: (s: String)String
+
+scala>     spark.udf.register("md5hash",md5hash _)
+res1: org.apache.spark.sql.expressions.UserDefinedFunction = UserDefinedFunction(<function1>,StringType,Some(List(StringType)))
+
+scala> source.createTempView("df_src_view")
+
+scala> spark.sql(s"""select md5hash(concat_ws('',${Src_ColList})) as Md5Hash,* from df_src_view""")
+res3: org.apache.spark.sql.DataFrame = [Md5Hash: string, col1: int ... 2 more fields]
+
+scala> val df_src_table=spark.sql(s"""select md5hash(concat_ws('',${Src_ColList})) as Md5Hash,* from df_src_view""")
+df_src_table: org.apache.spark.sql.DataFrame = [Md5Hash: string, col1: int ... 2 more fields]
+
+scala> df_src_table.show();
++--------------------+----+----+----+
+|             Md5Hash|col1|col2|col3|
++--------------------+----+----+----+
+|0-D41D8CD98F00B20...|   1|   2|   3|
+|0-D41D8CD98F00B20...|   1|   2|   3|
++--------------------+----+----+----+
+
+        ________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+82.
+scala> val firstDF = spark.range(3).toDF("myCol")
+firstDF: org.apache.spark.sql.DataFrame = [myCol: bigint]
+
+scala> firstDF.show();
++-----+
+|myCol|
++-----+
+|    0|
+|    1|
+|    2|
++-----+
+
+
+scala> val newRow = Seq(20)
+newRow: Seq[Int] = List(20)
+
+
+scala> newRow
+res4: Seq[Int] = List(20)
+
+scala> print(newRow);
+List(20)
+scala> val appended = firstDF.union(newRow.toDF())
+appended: org.apache.spark.sql.Dataset[org.apache.spark.sql.Row] = [myCol: bigint]
+
+scala> appended.show();
++-----+
+|myCol|
++-----+
+|    0|
+|    1|
+|    2|
+|   20|
++-----+
+_______________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+83.
+Append to a DataFrame
+March 10, 2020
+
+To append to a DataFrame, use the union method.
+
+Scala
+Copy to clipboardCopy
+%scala
+
+val firstDF = spark.range(3).toDF("myCol")
+val newRow = Seq(20)
+val appended = firstDF.union(newRow.toDF())
+display(appended)
+Python
+Copy to clipboardCopy
+%python
+
+firstDF = spark.range(3).toDF("myCol")
+newRow = spark.createDataFrame([[20]])
+appended = firstDF.union(newRow)
+display(appended)
+        ________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+84. DBeaver:
+https://dbeaver.io/download/
+Windows 64 bit (installer)
+https://dbeaver.io/files/dbeaver-ce-latest-x86_64-setup.exe
+        ________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+85.  Spark scala --Spark – How to get current date & timestamp
+import spark.sqlContext.implicits._
+
+scala> val dt = Seq((1)).toDF("seq")
+scala> dt.show();
++---+
+|seq|
++---+
+|  1|
++---+
+
+scala> val curDate = dt.withColumn("current_date",current_date().as("current_date")).withColumn("current_timestamp",current_timestamp().as("current_timestamp"));
+curDate: org.apache.spark.sql.DataFrame = [seq: int, current_date: date ... 1 more field]
+
+scala> curDate.show();
++---+------------+--------------------+
+|seq|current_date|   current_timestamp|
++---+------------+--------------------+
+|  1|  2021-04-01|2021-04-01 14:19:...|
++---+------------+--------------------+
+
+
+scala> curDate.show(false);
++---+------------+-----------------------+
+|seq|current_date|current_timestamp      |
++---+------------+-----------------------+
+|1  |2021-04-01  |2021-04-01 14:19:20.261|
++---+------------+-----------------------+
+
+scala> val END_TIME:org.apache.spark.sql.DataFrame = curDate.select("current_timestamp")
+END_TIME: org.apache.spark.sql.DataFrame = [current_timestamp: timestamp]
+
+scala> END_TIME.show();
++--------------------+
+|   current_timestamp|
++--------------------+
+|2021-04-01 15:12:...|
++--------------------+
+
+scala> END_TIME.show(false);
++----------------------+
+|current_timestamp     |
++----------------------+
+|2021-04-01 15:13:09.79|
++----------------------+
+
+scala> var END_TIME1=END_TIME.select("current_timestamp");
+END_TIME1: org.apache.spark.sql.DataFrame = [current_timestamp: timestamp]
+
+scala> END_TIME1.show();
++--------------------+
+|   current_timestamp|
++--------------------+
+|2021-04-01 15:18:...|
++--------------------+
+ 
+       ________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+86. 
+scala> val dateFormat = "yyyy-MM-dd HH:mm"
+dateFormat: String = yyyy-MM-dd HH:mm
+
+scala> val dateValue = spark.range(1).select(date_format(current_timestamp,dateFormat)).as[(String)].first
+dateValue: String = 2021-04-01 15:24
+
+scala> val fileName = "TestFile_" + dateValue+ ".csv"
+fileName: String = TestFile_2021-04-01 15:24.csv
+
+        ____
+
+scala> val dateFormat = "yyyy-MM-dd HH:mm:ss"
+dateFormat: String = yyyy-MM-dd HH:mm:ss
+
+scala> val START_TIME = spark.range(1).select(date_format(current_timestamp,dateFormat)).as[(String)].first
+START_TIME: String = 2021-04-01 15:26:56
+
+var CountDF_Time = CountDF.withColumn("START_TIME",lit(START_TIME));
+CountDF_Time: org.apache.spark.sql.DataFrame = [source_count: bigint, target_count: bigint ... 3 more fields]
+
+scala> CountDF_Time.show();
++------------+------------+---+---+-------------------+
+|source_count|target_count|SMT|TMS|         START_TIME|
++------------+------------+---+---+-------------------+
+|           2|           2|  0|  0|2021-04-01 15:36:20|
++------------+------------+---+---+-------------------+
+
+----------OR direct you can do like below
+
+scala> CountDF.show();
++------------+------------+---+---+
+|source_count|target_count|SMT|TMS|
++------------+------------+---+---+
+|           2|           2|  0|  0|
++------------+------------+---+---+
+
+
+scala> var CountDF=spark.sql("select * from df_Count").withColumn("START_TIME",lit(START_TIME));
+CountDF: org.apache.spark.sql.DataFrame = [source_count: bigint, target_count: bigint ... 3 more fields]
+
+scala> CountDF.show();
++------------+------------+---+---+-------------------+
+|source_count|target_count|SMT|TMS|         START_TIME|
++------------+------------+---+---+-------------------+
+|           2|           2|  0|  0|2021-04-01 16:00:41|
++------------+------------+---+---+-------------------+
+
+____________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+87. Add new column into dataframe:
+scala> var CountDF_Time = CountDF.withColumn("START_TIME",lit(null));
+CountDF_Time: org.apache.spark.sql.DataFrame = [source_count: bigint, target_count: bigint ... 3 more fields]
+
+scala> CountDF_Time.show();
++------------+------------+---+---+----------+
+|source_count|target_count|SMT|TMS|START_TIME|
++------------+------------+---+---+----------+
+|           2|           2|  0|  0|      null|
++------------+------------+---+---+----------+
+
+        ________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+88.
+
+How does PySpark compare two Dataframe?
+First, I join two dataframe into df3 and used the columns from df1 . By folding left to the df3 with temp columns that have the value for column name when df1 and df2 has the same id and other column values. After that, concat_ws for those column names and the null's are gone away and only the column names are left.
+
+example:
+//Identification of Md5Hash from both source and target tables which data is not matching
+    val md5_values = spark.sql(
+      """
+    select COALESCE(A.Md5Hash,B.Md5Hash) as Md5Hash from
+    (select Md5Hash,count(1) as cn_cnt from df_src_hashed group by Md5Hash) A
+    full outer join
+    (select Md5Hash,count(1) as cn_cnt from df_tgt_hashed group by Md5Hash) B
+    ON A.cn_cnt=B.cn_cnt AND A.Md5Hash=B.Md5Hash
+    WHERE (B.Md5Hash is null OR A.Md5Hash is null)
+    group by 1
+    """)
+        ________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+89.  How to create hash in spark shell;
+import java.security.MessageDigest
+def md5hash(s:String) : String = {
+            val digest = MessageDigest.getInstance("MD5")
+            val md5hash = digest.digest(s.getBytes).map(0xFF & _).map { "%02x".format(_) }.foldLeft(""){_ + _}
+            return s.length()+"-"+md5hash.map(_.toUpper)
+          }
+md5hash: (s: String)String
+
+scala>     spark.udf.register("md5hash",md5hash _)
+
+        ________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+90.scala> System.getProperty("user.name")
+res2: String = q1bbivrl
+
+        _________
+scala> System.getProperty("user.dir");
+res13: String = /home/q1bbivrl
+
+scala> System.getProperty("home");
+res14: String = null
+
+scala> System.getProperty("os.name");
+res15: String = Linux
+
+scala> System.getProperty("name");
+res16: String = null
+
+scala> System.getProperty("os.version");
+res20: String = 3.10.0-1127.19.1.el7.x86_64
+
+_______________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+91.
+$ tar -zxvf {file.tar.gz}
+$ tar -xvf file.tar
+Where,
+
+-z : Work on gzip compression automatically when reading archives.
+-x : Extract tar.gz archive.
+-v : Produce verbose output i.e. display progress and extracted file list on screen.
+-f : Read the archive from the archive to the specified file. In this example, read backups.tar.gz archive.
+-t : List the files in the archive.
+-r : Append files to the end of the tarball.
+--delete (GNU/Linux tar only) : Delete files from the tarball.
+In order to untar a tar file, the -x (for extract) and -f options are needed.
+        ________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+92.
+[dg663e@blpd239 bin]$ logname
+dg663e
+[dg663e@blpd239 bin]$ who am i
+dg663e   pts/8        2021-04-05 06:47 (nd204-151-102-51.amdocs.nat.att.com)
+[dg663e@blpd239 bin]$
+[dg663e@blpd239 bin]$ whoami
+dg663e
+
+
+===>
+
+[dg663e@blpd239 bin]$ sudo su - q1bbivrl
+Last login: Mon Apr  5 07:10:04 EDT 2021 on pts/25
+$ logname
+dg663e
+$ whoami
+q1bbivrl
+
+        ________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+93.
+
+scala> import sys.process._;
+import sys.process._
+
+scala> "logname".!
+dg663e
+res10: Int = 0
+
+scala> var username=Seq("logname").!!
+username: String =
+"dg663e
+"
+
+scala> print(username);
+dg663e
+
+===> special char remove
+scala> print(username+" Test");
+dg663e
+ Test 
+
+scala> var user=username.replaceAll(System.lineSeparator, "")
+user: String = dg663e
+
+scala> print(user+" Test")
+dg663e Test 
+
+scala> if (user=="dg663e") { println("hi") }
+hi
+
+OR
+
+scala> var user=username.split('\n')(0)
+scala> if (user=="dg663e") { println("hi") }
+hi
+        _______________________
+OR
+
+Seq("logname").!!.split('\n')(0)
+_________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+94. Dataframe to CSV file in spark-shell   ---not working
+
+scala> val source = Seq(
+     |   (1, 2, 3),
+     |   (1, 2, 3),
+     |   (4, 5, 6),
+     |   (1, 2, 3),
+     |   (9, 9, 39),
+     |   (4, 5, 6),
+     |   (8, 8, 8),
+     |   (1, 2, 3),
+     |   (7, 7, 7)
+     | ).toDF("col1", "col2", "col3");
+source: org.apache.spark.sql.DataFrame = [col1: int, col2: int ... 1 more field]
+
+scala> source.write.format("com.databricks.spark.csv").save("file:/opt/data/stage01/datacompare/AK/AutoCloud/result/test.csv")
+
+OR
+
+source.coalesce(1).write.option("header","true").option("sep",",").mode("Append").csv("file:/opt/data/stage01/datacompare/AK/AutoCloud/result")
+        ________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+95.left and right print:
+
+scala> source.show(false);
++----+----+----+
+|col1|col2|col3|
++----+----+----+
+|1   |2   |3   |
+|1   |2   |3   |
+|4   |5   |6   |
+|1   |2   |3   |
+|9   |9   |39  |
+|4   |5   |6   |
+|8   |8   |8   |
+|1   |2   |3   |
+|7   |7   |7   |
++----+----+----+
+
+
+scala> source.coalesce(1)
+res1: org.apache.spark.sql.Dataset[org.apache.spark.sql.Row] = [col1: int, col2: int ... 1 more field]
+
+scala> source.coalesce(1).show()
++----+----+----+
+|col1|col2|col3|
++----+----+----+
+|   1|   2|   3|
+|   1|   2|   3|
+|   4|   5|   6|
+|   1|   2|   3|
+|   9|   9|  39|
+|   4|   5|   6|
+|   8|   8|   8|
+|   1|   2|   3|
+|   7|   7|   7|
++----+----+----+
+
+        ________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+96. Hexa to ASCII convert:
+a.txt
+313737303639373234313539^_473236323338333937^_323032302D31322D31372030363A35383A3433^_323032302D31322D31372030363A35383A3433^_^_3330323239^_^_4353393039^_^_30^_31^_31^_31^_4D444C5331373730363937323431353938353433^_
+sed 's/^_/7C/g' a.txt > b.txt
+3137373036393732343135397C4732363233383339377C323032302D31322D31372030363A35383A34337C323032302D31322D31372030363A35383A34337C7C33303232397C7C43533930397C7C307C317C317C317C4D444C53313737303639373234313539383534337C
+First change ^_ to 7C  ( that is column separator ^_ to |) ( 7C is nothing but its ascii vakue is pipe |) then use below command
+
+xxd -r -p b.txt
+etlap24@lltd028 $ xxd -r -p b.txt
+177069724159|G26238397|2020-12-17 06:58:43|2020-12-17 06:58:43||30229||CS909||0|1|1|1|MDLS1770697241598543|
+        ________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+97.https://www.freecodecamp.org/news/ascii-table-hex-to-ascii-value-character-code-chart-2/
+7C ===> | 'pipe'
+7E ==>  next line
+
+sed 's/7E/\n/g' abc.txt > def.txt
+
+etlap24@lltd028 $ head -2 def.txt
+BAN7CGLPP_ID7CLLP_CNT_UPDATE_DATE7CSYS_CREATION_DATE7CSYS_UPDATE_DATE7COPERATOR_ID7CAPPLICATION_ID7CDL_SERVICE_CODE7CDL_UPDATE_STAMP7CLLP_REQUEST_ID7CQUOTE_PHONE_CNT7CQUOTE_SDGCHG_CNT7CMAX_VALID_PHONE_CNT7CLLP_GLPP_ID
+3137373036393732343135397C4732363233383339377C323032302D31322D31372030363A35383A34337C323032302D31322D31372030363A35383A34337C7C33303232397C7C43533930397C7C307C317C317C317C4D444C53313737303639373234313539383534337C
+
+sed 's/$/0A/g' def.txt
+BAN7CGLPP_ID7CLLP_CNT_UPDATE_DATE7CSYS_CREATION_DATE7CSYS_UPDATE_DATE7COPERATOR_ID7CAPPLICATION_ID7CDL_SERVICE_CODE7CDL_UPDATE_STAMP7CLLP_REQUEST_ID7CQUOTE_PHONE_CNT7CQUOTE_SDGCHG_CNT7CMAX_VALID_PHONE_CNT7CLLP_GLPP_ID0A
+3137373036393732343135397C4732363233383339377C323032302D31322D31372030363A35383A34337C323032302D31322D31372030363A35383A34337C7C33303232397C7C43533930397C7C307C317C317C317C4D444C53313737303639373234313539383534337C0A
+
+etlap24@lltd028 $ xxd -r -p def.txt|head
+177069724159|G26238397|2020-12-17 06:58:43|2020-12-17 06:58:43||30229||CS909||0|1|1|1|MDLS1770697241598543|
+177069724856|G26238452|2020-12-18 11:19:00|2020-12-17 12:30:18|2020-12-18 11:19:00|919118745||CS910||0|3|3|3|MDLS1770697248568581|
+
+OR in oracle:
+ select UTL_RAW.CAST_TO_VARCHAR2(DBMS_LOB.SUBSTR(SERVING_NETWORK, 4000,1)) test from IOMDBO.DSL_INFO where rownum<3;
+
+=================================
+All step by step:
+TLG.NBI.NBIMASTEROWN.BAN_LIST.04.0000000000.20211025.133211.602281629-0400.EDT.dat.gz
+1.  gunzip TLG.NBI.NBIMASTEROWN.BAN_LIST.04.0000000000.20211025.133211.602281629-0400.EDT.dat.gz.gpg
+2.  sed -i 's/^_/7C/g' TLG.NBI.NBIMASTEROWN.BAN_LIST.04.0000000000.20211025.133211.602281629-0400.EDT.dat
+3.  sed -i 's/^]/7E/g' TLG.NBI.NBIMASTEROWN.BAN_LIST.04.0000000000.20211025.133211.602281629-0400.EDT.dat
+4.  xxd -r -p TLG.NBI.NBIMASTEROWN.BAN_LIST.04.0000000000.20211025.133211.602281629-0400.EDT.dat|sed 's/\~/\n/g' > new_file.txt
+
+        ________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+98.  history of hexa to ascii convertion
+1029    echo "313737303639373234313539|473236323338333937|323032302D31322D31372030363A35383A3433|323032302D31322D31372030363A35383A3433||3330323239||4353393039||30|31|31|31|4D444C5331373730363937323431353938353433"|xxd -r
+1030    ls -lrt
+1031    head TLG.DLS.DLSMASTEROWN.LLP_GROUP_SNAPSHOT.03.0000000000.20210405.095703.626837124-04001.EDT.dat |xxd -r
+1032       sqlplus dg663e/28January_1993@P1GCP5D2
+1033    sqlplus dg663e/SatinAped_Crowded23@P1GCP5D2
+1034    head
+1035    head -2 abc.txt
+1036    head -2 abc.csv
+1037    head
+1038    echo "313737303639373234313539"|xxd -r -p
+1039    head
+1040    echo "323032302D31322D31372030363A35383A3433"|xxd -r -p
+1041    head -2 abc.csv|tail -1
+1042    head -2 abc.csv|tail -1|xxd -r -p
+1043    cat TLG.DLS.DLSMASTEROWN.LLP_GROUP_SNAPSHOT.03.0000000000.20210405.095703.626837124-04001.EDT.dat|xxd -r -p |head -2
+1044    head
+1045    ls -lrt
+1046     awk -F '|' '{print $3}' abc.csv|xxd -r -p |head
+1047     awk -F '|' '{print $3}' abc.csv|head
+1048     awk -F '|' '{print $3}' abc.csv|head|xxd -r -p
+1049     awk -F '|' '{print $3"\"}' abc.csv|head|xxd -r -p
+1050     awk -F '|' '{print $3","}' abc.csv|head|xxd -r -p
+1051     awk -F '|' '{print $1}' abc.csv|head|xxd -r -p
+1052    ls -lrt
+1053    awk -F '' '{print $2}' TLG.DLS.DLSMASTEROWN.LLP_GROUP_SNAPSHOT.03.0000000000.20210405.095703.626837124-04001.EDT.dat
+1054    awk -F '' '{print $2}' TLG.DLS.DLSMASTEROWN.LLP_GROUP_SNAPSHOT.03.0000000000.20210405.095703.626837124-04001.EDT.dat > b.txt
+1055    vi b.txt
+1056    xxd -r -p b.txt
+1057    xxd -r -p b.txt > c.txt
+1058    vi c.txt
+1059    rm c.txt
+1060    ls -lrt
+1061     head
+1062    vi b.txt
+1063    xxd -r -p b.txt
+1064    vi b.txt
+1065    awk -F '' '{print $2}' TLG.DLS.DLSMASTEROWN.LLP_GROUP_SNAPSHOT.03.0000000000.20210405.095703.626837124-04001.EDT.dat > c.txt
+1066    vi c.txt
+1067    ls -lrt
+1068     rm b.txt c.txt
+1069    ls -lrt
+1070     du -h .
+1071    vi abc.csv
+1072    vi abc.csv
+1073    xxd -r -p abc.csv > new_file.txt
+1074    wc -l new_file.txt
+1075    vi abc.csv
+1076    head -1 abc.csv
+1077    vi abc.csv
+1078    xxd -r -p abc.csv|head -2 xxd -r -p abc.csv
+1079    xxd -r -p abc.csv|head -2
+1080    ls -lrt
+1081     rm abc.csv new_file.txt
+1082    cp TLG.DLS.DLSMASTEROWN.LLP_GROUP_SNAPSHOT.03.0000000000.20210405.095703.626837124-04001.EDT.dat abc.txt
+1083    vi abc.txt
+1084    xxd -r -p abc.txt|head
+1085    xxd -r -p abc.txt
+1086    vi abc.txt
+1087    xxd -r -p abc.txt|head
+1088    xxd -r -p abc.txt
+1089    vi
+1090    vi abc.txt
+1091    xxd -r -p abc.txt|head
+1092    xxd -r -p abc.txt
+1093    sed 's/7E/\n/g' abc.txt|head
+1094    sed 's/7E/\n/g' abc.txt > def.txt
+1095    vi def.txt
+1096    head -2 def.txt
+1097    xxd -r -p def.txt|head
+1098    echo "7C" |xxd -r -p
+1099    echo "7E" |xxd -r -p
+1100    ls -lrt
+1101     vi def.txt
+1102    xxd -r -p def.txt|head
+1103    echo "0A" |xxd -r -p
+1104    ls -lrt
+1105     vi def.txt
+1106    xxd -r -p def.txt|head
+1107    xxd -r -p def.txt > new_file.txt
+1108    ls -lrt
+1109    vi abc.txt
+1110    echo "BAN7CGLPP_ID7CLLP_CNT_UPDATE_DATE7CSYS_CREATION_DATE7CSYS_UPDATE_DATE7COPERATOR_ID7CAPPLICATION_ID7CDL_SERVICE_CODE7CDL_UPDATE_STAMP7CLLP_REQUEST_ID7CQUOTE_PHONE_CNT7CQUOTE_SDGCHG_CNT7CMAX_VALID_PHONE_CNT7CLLP_GLPP_ID"|xxd -r -p
+1111    echo "BAN7CGLPP_ID7CLLP_CNT_UPDATE_DATE7CSYS_CREATION_DATE7CSYS_UPDATE_DATE7COPERATOR_ID7CAPPLICATION_ID7CDL_SERVICE_CODE7CDL_UPDATE_STAMP7CLLP_REQUEST_ID7CQUOTE_PHONE_CNT7CQUOTE_SDGCHG_CNT7CMAX_VALID_PHONE_CNT7CLLP_GLPP_ID"|sed 's/7C/|/g'
+1112    vi new_file.txt
+1113    ls -lrt
+1114    rm  abc.txt def.txt
+1115    ls -lrt
+1116     head new_file.txt
+1117    clear
+1118    history -100
+[/cfs/app/etl_t2x/ecdw_apps_t24/dpspi/files/tgtfiles/daily/TLG.DLS/DLSMASTEROWN/LLP_GROUP_SNAPSHOT]
+
+        ________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+99.
+CHECK DB LINKS IN ORACLE:
+
+select * from  user_db_links;
+        ________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+100.
+
+SQL> select DSL_INFO_ID,SERVING_NETWORK from IOMDBO.DSL_INFO where DSL_INFO_ID='14201' ;
+
+DSL_INFO_ID
+-----------
+SERVING_NETWORK
+--------------------------------------------------------------------------------
+      14201
+ACED00057372002D636F6D2E6174742E696F6D2E67656E2E64736C656E742E6373692E5365727669
+6E674E6574776F726B496E666FCA35CED3E884CEA90200084C001568617342616E64776964746849
+
+
+Image column check in oracle:  ( or Hexa to ASCII)
+
+SQL>   select UTL_RAW.CAST_TO_VARCHAR2(DBMS_LOB.SUBSTR(SERVING_NETWORK, 4000,1)) test from IOMDBO.DSL_INFO where rownum<3;
+
+
+
+
+        ________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+101.
+-rw-r--r-- 1 aers biadm 14821486 May 18 09:54 20210518-GeCEP-Attachment.CSV
+$ stat -c %s 20210518-GeCEP-Attachment.CSV
+14821486
+
+        ________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+102.   like command in awk, to filter by particular charater
+
+awk -F '|' '$6 ~ /[%]*a/ {print $0}' EOD_IMSI_Status_20210531.csv
+310410054403136|||AT&T Wireless Services - MAO|20170801|UMTS Batch||U
+
+(it returns all records which 6th column contain "a" character value)
+
+not like:-
+$ awk -F '|' '$6 !~ /[%]*a/ {print $0}' EOD_IMSI_Status_20210531.csv
+310410208508466|||AT&T Wireless Services - MAO|20170801|20827||U
+        ________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+103.
+awk '{printf "%-30s|%-18s|%-20s\n",$1,$2,$3}'  report.txt > final_report.txt
+
+parameter_name                |status            |comment
+banking                       |ok                |NA
+finance                       |30%               |hike
+Loan_department               |ok                |20%
+HR_Group                      |defaulters        |Ajay
+        ________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+104.
+[dg663e@clth156 TEST]$ cat email.par
+userid=sqlplus H_TEMP/Peachtree\$675@Q5CDW
+control=email.ctl
+log=email.log
+bad=email.bad
+data=email.dat
+direct=true
+
+[dg663e@clth156 TEST]$  cat email.ctl
+load data into table emails
+insert
+fields terminated by ","
+(
+email_id,
+email
+)
+
+[dg663e@clth156 TEST]$ cat email.dat
+1,john.doe@example.com
+2,jane.doe@example.com
+3,peter.doe@example.com
+
+
+Command:
+--------
+[dg663e@clth156 TEST]$ sqlldr H_TEMP/Peachtree\$675@Q5CDW
+
+control = email.ctl
+
+SQL*Loader: Release 11.2.0.4.0 - Production on Wed Aug 25 05:07:20 2021
+
+Copyright (c) 1982, 2011, Oracle and/or its affiliates.  All rights reserved.
+
+Commit point reached - logical record count 3
+
+OR
+sqlldr H_TEMP/Peachtree\$675@Q5CDW control=email.ctl data=email.dat log=email.log
+OR
+Final Command: sqlldr userid=scott/tiger control=emp.ctl log=emp.log 
+
+
+=============================
+[dg663e@clth156 TEST]$ sqlldr H_TEMP/Peachtree\$675@Q5CDW control=email.ctl data=email.dat log=email.log
+
+SQL*Loader: Release 11.2.0.4.0 - Production on Wed Aug 25 05:24:53 2021
+
+Copyright (c) 1982, 2011, Oracle and/or its affiliates.  All rights reserved.
+
+Commit point reached - logical record count 3
+============================
+
+SQL> select * from emails;
+
+  EMAIL_ID
+----------
+EMAIL
+--------------------------------------------------------------------------------
+         1
+john.doe@example.com
+
+         2
+jane.doe@example.com
+
+         3
+peter.doe@example.com
+
+
+        ________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+105.
+create temporary table in oracle
+CREATE GLOBAL TEMPORARY TABLE TM_test10 ON COMMIT PRESERVE ROWS AS SELECT /*+ PARALLEL(8)*/ REQUEST_ID from table_name;        
+________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+106. ORACLE time
+SQL> select add_months(( trunc(sysdate,'MM') ),-1) from dual;
+
+ADD_MONTHS((TRUNC(
+------------------
+01-SEP-21
+
+        ________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+107.  PACKAGE EXECUTE commmand:-
+
+sqlplus "${_local_schema_id}/${_local_schema_id_pw}@${_local_instance}" <<EOF > $LOG 2> $LOG
+set termout on
+set echo on
+set pages 0
+set serveroutput on size 1000000
+set pagesize 10000
+set linesize 300
+exec SR_EVT_SNT.MIS_SRR_PROCESSING_PKG.startHere();
+exit
+EOF
+
+        ________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+108. find your name in linux
+
+grep dg663e /etc/passwd |cut -d":" -f5
+        ________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+109.   password function call scripts
+/opt/app/nas/etl_grid/common/bidw_grid_global_dir/grid_common_lib/getLogonCredentials.lib.env
+        ________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+110.
+        ________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+111.
+        ________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+112.
+        ________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+113.
+        ________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+114.
+        ________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+115.
+        ________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+116.
+        ________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+117.
+        ________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+118.
+        ________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+119.
+        ________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+120.
+        ________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+121.
+        ________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+122.
+        ________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+123.
+        ________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+124.
+        ________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+125.
+        ________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+126.
+        ________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+127.
+        ________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+128.
+        ________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+129.
+        ________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+130.
+        ________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+131.
+        ________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+132.
+        ________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+133.
+        ________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+134.
+        ________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+135.
+        ________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+136.
+        ________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+137.
+        ________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+138.
+        ________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+139.
+        ________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+140.
+        ________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+141.
+        ________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+142.
+        ________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+143.
+        ________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+144.
+        ________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+145.
+        ________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+146.
+        ________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+147.
+        ________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+148.
+        ________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+149.
+        ________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+150.
+        ________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+151.
+        ________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+152.
+        ________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+153.
+        ________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+154.
+        ________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+155.
+        ________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+156.
+        ________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+157.
+        ________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+158.
+        ________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+159.
+        ________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+160.
+        ________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+161.
+        ________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+162.
+        ________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+163.
+        ________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+164.
+        ________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+165.
+        ________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+166.
+        ________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+167.
+        ________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+168.
+        ________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+169.
+        ________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+170.
+        ________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+171.
+        ________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+172.
+        ________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+173.
+        ________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+174.
+        ________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+175.
+        ________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+176.
+        ________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+177.
+        ________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+178.
+        ________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+179.
+        ________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+180.
+        ________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+181.
+        ________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+182.
+        ________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+183.
+        ________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+184.
+        ________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+185.
+        ________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+186.
+        ________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+187.
+        ________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+188.
+        ________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+189.
+        ________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+190.
+        ________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+191.
+        ________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+192.
+        ________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+193.
+        ________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+194.
+        ________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+195.
+        ________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+196.
+        ________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+197.
+        ________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+198.
+        ________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+199.
+        ________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
